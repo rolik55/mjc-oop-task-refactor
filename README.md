@@ -1,1 +1,1 @@
-# mjc-oop-task-refactor
+OOP task refactored using the provided guide

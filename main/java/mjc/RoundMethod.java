@@ -5,7 +5,14 @@ public enum RoundMethod {
         protected double roundFunction(double value) {
             return Math.floor(value);
         }
+    },
+
+    ROUND {
+        protected double roundFunction(double value) {
+            return Math.round(value);
+        }
     };
+
 
     protected abstract double roundFunction(double value);
 

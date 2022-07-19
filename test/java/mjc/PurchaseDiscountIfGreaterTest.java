@@ -13,7 +13,7 @@ class PurchaseDiscountIfGreaterTest {
         Product product = new Product("Book", 1234);
         int amount = 7;
         PurchaseDiscountIfGreater purchase = new PurchaseDiscountIfGreater(product, amount, 15, 5);
-        String expected = "73.00";
+        String expected = "73.0";
         assertEquals(expected, purchase.getCost().toString());
     }
 
@@ -22,7 +22,7 @@ class PurchaseDiscountIfGreaterTest {
         Product product = new Product("Book", 1234);
         int amount = 7;
         PurchaseDiscountIfGreater purchase = new PurchaseDiscountIfGreater(product, amount, 15, 10);
-        String expected = "86.00";
+        String expected = "86.0";
         assertEquals(expected, purchase.getCost().toString());
     }
 }

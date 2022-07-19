@@ -12,4 +12,9 @@ public class PurchaseWithExpenses extends AbstractPurchase {
     public Euro getFinalCost(Euro baseCost) {
         return baseCost.add(expenses);
     }
+
+    @Override
+    protected String fieldsToString() {
+        return super.fieldsToString() + ";" + expenses.toString();
+    }
 }

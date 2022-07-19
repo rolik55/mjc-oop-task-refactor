@@ -14,7 +14,7 @@ class PurchaseWithExpensesTest {
         Product product = new Product("Book", 1234);
         int amount = 5;
         PurchaseWithExpenses purchase = new PurchaseWithExpenses(product, amount, new Euro(525));
-        String expected = "66.00";
+        String expected = "66.0";
         assertEquals(expected, purchase.getCost().toString());
     }
 }

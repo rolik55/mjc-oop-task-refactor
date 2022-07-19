@@ -13,7 +13,7 @@ class PurchaseAllDiscountedTest {
         Product product = new Product("Book", 1234);
         int amount = 7;
         PurchaseAllDiscounted purchase = new PurchaseAllDiscounted(product, amount, 15);
-        String expected = "PurchaseAllDiscounted;Book;1234.00;7;85.00";
+        String expected = "PurchaseAllDiscounted;Book;12.34;7;0.15;85.0";
         assertEquals(expected, purchase.toString());
     }
 
@@ -25,7 +25,7 @@ class PurchaseAllDiscountedTest {
         int amount2 = 2;
         PurchaseAllDiscounted purchase1 = new PurchaseAllDiscounted(product1, amount1, 234);
         PurchaseAllDiscounted purchase2 = new PurchaseAllDiscounted(product2, amount2, 500);
-        int expected = 1;
+        int expected = 49900;
         assertEquals(expected, purchase1.compareTo(purchase2));
     }
 
@@ -49,7 +49,7 @@ class PurchaseAllDiscountedTest {
         int amount2 = 1;
         PurchaseAllDiscounted purchase1 = new PurchaseAllDiscounted(product1, amount1, 234);
         PurchaseAllDiscounted purchase2 = new PurchaseAllDiscounted(product2, amount2, 500);
-        int expected = -1;
+        int expected = -7500;
         assertEquals(expected, purchase1.compareTo(purchase2));
     }
 
@@ -58,7 +58,7 @@ class PurchaseAllDiscountedTest {
         Product product = new Product("Book", 1234);
         int amount = 7;
         PurchaseAllDiscounted purchase = new PurchaseAllDiscounted(product, amount, 15);
-        String expected = "85.00";
+        String expected = "85.0";
         assertEquals(expected, purchase.getCost().toString());
     }
 }

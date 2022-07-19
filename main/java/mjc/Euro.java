@@ -1,7 +1,5 @@
 package main.java.mjc;
 
-import java.util.Locale;
-
 public class Euro implements Comparable<Euro> {
     private final int value;
 
@@ -10,11 +8,11 @@ public class Euro implements Comparable<Euro> {
     }
 
     public Euro(int euros, int cents) {
-        this.value = euros * 100 + cents;
+        this(euros * 100 + cents);
     }
 
     public Euro(Euro euro) {
-        this.value = euro.value;
+        this(euro.value);
     }
 
     public Euro add(Euro euro) {
@@ -31,8 +29,9 @@ public class Euro implements Comparable<Euro> {
 
     @Override
     public String toString() {
-        String formattedValue = String.format(Locale.ROOT, "%.02f", value * 1.);
-        return formattedValue;
+        int euros = value / 100;
+        int cents = value % 100;
+        return euros + "." + cents;
     }
 
     public boolean equals(Euro euro) {
@@ -41,12 +40,7 @@ public class Euro implements Comparable<Euro> {
 
     @Override
     public int compareTo(Euro euro) {
-        if (this.value < euro.value)
-            return 1;
-        else if (this.value == euro.value)
-            return 0;
-        else
-            return -1;
+        return euro.value - this.value;
     }
 
     public Euro mul(double x, RoundMethod roundMethod, int d) {

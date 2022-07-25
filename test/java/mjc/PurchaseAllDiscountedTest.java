@@ -5,6 +5,7 @@ import main.java.mjc.PurchaseAllDiscounted;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PurchaseAllDiscountedTest {
 
@@ -25,8 +26,7 @@ class PurchaseAllDiscountedTest {
         int amount2 = 2;
         PurchaseAllDiscounted purchase1 = new PurchaseAllDiscounted(product1, amount1, 234);
         PurchaseAllDiscounted purchase2 = new PurchaseAllDiscounted(product2, amount2, 500);
-        int expected = 49900;
-        assertEquals(expected, purchase1.compareTo(purchase2));
+        assertTrue(purchase1.compareTo(purchase2) > 0);
     }
 
     @Test
@@ -37,8 +37,7 @@ class PurchaseAllDiscountedTest {
         int amount2 = 1;
         PurchaseAllDiscounted purchase1 = new PurchaseAllDiscounted(product1, amount1, 234);
         PurchaseAllDiscounted purchase2 = new PurchaseAllDiscounted(product2, amount2, 500);
-        int expected = 0;
-        assertEquals(expected, purchase1.compareTo(purchase2));
+        assertTrue(purchase1.compareTo(purchase2) == 0);
     }
 
     @Test
@@ -49,8 +48,7 @@ class PurchaseAllDiscountedTest {
         int amount2 = 1;
         PurchaseAllDiscounted purchase1 = new PurchaseAllDiscounted(product1, amount1, 234);
         PurchaseAllDiscounted purchase2 = new PurchaseAllDiscounted(product2, amount2, 500);
-        int expected = -7500;
-        assertEquals(expected, purchase1.compareTo(purchase2));
+        assertTrue(purchase1.compareTo(purchase2) < 0);
     }
 
     @Test

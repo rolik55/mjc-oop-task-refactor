@@ -15,6 +15,6 @@ public class PurchaseWithExpenses extends AbstractPurchase {
 
     @Override
     protected String fieldsToString() {
-        return super.fieldsToString() + ";" + expenses.toString();
+        return super.fieldsToString() + ";" + expenses;
     }
 }

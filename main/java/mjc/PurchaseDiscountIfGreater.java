@@ -12,10 +12,10 @@ public class PurchaseDiscountIfGreater extends AbstractPurchase {
 
     @Override
     public Euro getFinalCost(Euro baseCost) {
-        Euro finalCost = new Euro(baseCost);
-        if (getAmount() > requiredAmount)
-            finalCost = finalCost.mul(1 - discountPercentage / 100., RoundMethod.ROUND, 0);
-        return finalCost;
+        if (getAmount() > requiredAmount) {
+            baseCost = baseCost.mul(1 - discountPercentage / 100., RoundMethod.ROUND, 0);
+        }
+        return baseCost;
     }
 
     @Override

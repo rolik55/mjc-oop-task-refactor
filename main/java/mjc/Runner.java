@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Runner {
     public static void main(String[] args) {
-        Product product = new Product("Milk", 150);
+        final Product product = new Product("Milk", 150);
         AbstractPurchase[] purchases = {
                 new PurchaseAllDiscounted(product, 16, 10),
                 new PurchaseAllDiscounted(product, 8, 5),
@@ -14,20 +14,25 @@ public class Runner {
                 new PurchaseWithExpenses(product, 8, new Euro(180))
         };
 
-        Runner.printPurchases(purchases);
+        printPurchases(purchases);
         Arrays.sort(purchases);
         System.out.println();
-        Runner.printPurchases(purchases);
-        Runner.printMinimumCost(purchases);
+        printPurchases(purchases);
+        printMinimumCost(purchases);
+
         PurchaseAllDiscounted searchKey = new PurchaseAllDiscounted(product, 1, 0);
-        int index = Runner.search(purchases, searchKey);
-        if (index < 0)
+        int index = search(purchases, searchKey);
+        if (index < 0) {
             System.out.println("No purchase with cost " + searchKey.getCost() + " found.");
-        else System.out.println(purchases[index]);
+        } else {
+            System.out.println(purchases[index]);
+        }
     }
 
     private static void printPurchases(AbstractPurchase[] purchases) {
-        for (AbstractPurchase purchase : purchases) System.out.println(purchase);
+        for (AbstractPurchase purchase : purchases) {
+            System.out.println(purchase);
+        }
     }
 
     private static void printMinimumCost(AbstractPurchase[] purchases) {

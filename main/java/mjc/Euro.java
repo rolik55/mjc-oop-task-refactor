@@ -1,5 +1,7 @@
 package main.java.mjc;
 
+import java.util.Locale;
+
 public class Euro implements Comparable<Euro> {
     private final int value;
 
@@ -29,9 +31,8 @@ public class Euro implements Comparable<Euro> {
 
     @Override
     public String toString() {
-        int euros = value / 100;
-        int cents = value % 100;
-        return euros + "." + cents;
+        String formattedValue = String.format(Locale.ROOT, "%.02f", value / 100.);
+        return formattedValue;
     }
 
     public boolean equals(Euro euro) {

@@ -9,6 +9,11 @@ public abstract class AbstractPurchase implements Comparable<AbstractPurchase> {
         this.amount = amount;
     }
 
+    public AbstractPurchase(String name, int price, int amount) {
+        this.product = new Product(name, price);
+        this.amount = amount;
+    }
+
     protected abstract Euro getFinalCost(Euro baseCost);
 
     public Euro getCost() {
@@ -23,7 +28,7 @@ public abstract class AbstractPurchase implements Comparable<AbstractPurchase> {
     }
 
     protected String fieldsToString() {
-        return getClass().getSimpleName() + ";" + product + ";" + amount;
+        return product + ";" + amount;
     }
 
     @Override

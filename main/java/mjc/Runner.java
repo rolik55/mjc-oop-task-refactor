@@ -1,7 +1,13 @@
 package main.java.mjc;
 
+import main.java.mjc.beans.AbstractPurchase;
+import main.java.mjc.beans.Product;
+import main.java.mjc.beans.PurchaseAllDiscounted;
+import main.java.mjc.beans.PurchaseList;
+
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class Runner {
     public static void main(String[] args) throws FileNotFoundException {
@@ -31,13 +37,14 @@ public class Runner {
 //        }
 
         //Exceptions Task
-        PurchaseList list = new PurchaseList("main/java/mjc/resources/purchases.csv");
+        Comparator<AbstractPurchase> comparator = AbstractPurchase::compareTo;
+        PurchaseList list = new PurchaseList("main/java/mjc/resources/purchases.csv", comparator);
         PurchaseAllDiscounted purchase = new PurchaseAllDiscounted(product, 10, 10);
         //list.insert(-4, purchase);
         //list.delete(4, 7);
         //System.out.println(list.getTotalCost());
-        //System.out.println(list.toString());
-        //Collections.sort(list.getPurchases());
+        System.out.println(list.toString());
+        //list.sort();
         //System.out.println(list.binarySearch(searchKey));;
     }
 

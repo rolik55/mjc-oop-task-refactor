@@ -1,7 +1,7 @@
 package test.java.mjc;
 
-import main.java.mjc.Product;
-import main.java.mjc.PurchaseDiscountIfGreater;
+import main.java.mjc.beans.Product;
+import main.java.mjc.beans.PurchaseDiscountIfGreater;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,7 +13,7 @@ class PurchaseDiscountIfGreaterTest {
         Product product = new Product("Book", 1234);
         int amount = 7;
         PurchaseDiscountIfGreater purchase = new PurchaseDiscountIfGreater(product, amount, 15, 5);
-        String expected = "73.0";
+        String expected = "73.00";
         assertEquals(expected, purchase.getCost().toString());
     }
 
@@ -22,7 +22,7 @@ class PurchaseDiscountIfGreaterTest {
         Product product = new Product("Book", 1234);
         int amount = 7;
         PurchaseDiscountIfGreater purchase = new PurchaseDiscountIfGreater(product, amount, 15, 10);
-        String expected = "86.0";
+        String expected = "86.00";
         assertEquals(expected, purchase.getCost().toString());
     }
 }

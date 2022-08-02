@@ -1,6 +1,6 @@
 package test.java.mjc;
 
-import main.java.mjc.Euro;
+import main.java.mjc.beans.Euro;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,7 +11,7 @@ class EuroTest {
     void add() {
         Euro euro1 = new Euro(123);
         Euro euro2 = new Euro(3685);
-        String expected = "38.8";
+        String expected = "38.08";
         assertEquals(expected, euro1.add(euro2).toString());
     }
 

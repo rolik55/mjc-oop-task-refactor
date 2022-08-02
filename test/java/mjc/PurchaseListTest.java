@@ -1,13 +1,14 @@
 package test.java.mjc;
 
-import main.java.mjc.AbstractPurchase;
-import main.java.mjc.Euro;
-import main.java.mjc.PurchaseAllDiscounted;
-import main.java.mjc.PurchaseList;
+import main.java.mjc.beans.AbstractPurchase;
+import main.java.mjc.beans.Euro;
+import main.java.mjc.beans.PurchaseAllDiscounted;
+import main.java.mjc.beans.PurchaseList;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileNotFoundException;
+import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -15,72 +16,91 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class PurchaseListTest {
     PurchaseList expected;
     PurchaseList list;
+    Comparator<AbstractPurchase> comparator = AbstractPurchase::compareTo;
 
 
     @Test
     @BeforeEach
-    void ConstructorTest() {
+    void ConstructorTest() throws CloneNotSupportedException {
         initializeLists();
         assertEquals(expected.toString(), list.toString());
     }
 
     @Test
     void ConstructorTestFileDoesNotExist() {
-        list = new PurchaseList("doesNotExist.csv");
+        list = new PurchaseList("doesNotExist.csv", comparator);
         expected = new PurchaseList();
         assertEquals(expected.toString(), list.toString());
     }
 
     @Test
-    void insertNegativeIndex() {
+    @DisplayName("insert: index < 0")
+    void insertNegativeIndex() throws CloneNotSupportedException {
         PurchaseAllDiscounted purchase = new PurchaseAllDiscounted("bread", 260, 3, 20);
         list.insert(-46, purchase);
-        assertEquals(purchase, list.getPurchases().get(0));
+        assertEquals(purchase.toString(), list.getPurchases().get(0).toString());
     }
 
     @Test
-    void insertIndexExceedsSize() {
+    @DisplayName("insert: index > list size")
+    void insertIndexExceedsSize() throws CloneNotSupportedException {
         PurchaseAllDiscounted purchase = new PurchaseAllDiscounted("bread", 260, 3, 20);
         list.insert(6512, purchase);
-        assertEquals(purchase, list.getPurchases().get(list.getPurchases().size() - 1));
+        assertEquals(purchase.toString(), list.getPurchases().get(list.getPurchases().size() - 1).toString());
     }
 
     @Test
-    void insert() {
+    void insert() throws CloneNotSupportedException {
         PurchaseAllDiscounted purchase = new PurchaseAllDiscounted("bread", 260, 3, 20);
         list.insert(5, purchase);
-        assertEquals(purchase, list.getPurchases().get(5));
+        assertEquals(purchase.toString(), list.getPurchases().get(5).toString());
     }
 
     @Test
-    void delete() {
+    void delete() throws CloneNotSupportedException {
+        expected = new PurchaseList();
+        addExpectedAbstractPurchase(0, "bread", 145, 5);
+        expected.insert(1, new PurchaseAllDiscounted("potato", 180, 2, 10));
+        addExpectedAbstractPurchase(2, "butter", 370, 1);
+        addExpectedAbstractPurchase(3, "milk", 131, 2);
+
         list.delete(4, 8);
-        expected.getPurchases().remove(4);
-        expected.getPurchases().remove(4);
-        expected.getPurchases().remove(4);
-        expected.getPurchases().remove(4);
+
         assertEquals(expected.toString(), list.toString());
     }
 
     @Test
-    void deleteNegativeFrom() {
+    @DisplayName("delete: from index < 0")
+    void deleteNegativeFrom() throws CloneNotSupportedException {
+        expected = new PurchaseList();
+        addExpectedAbstractPurchase(4, "bread", 154, 3);
+        expected.insert(5, new PurchaseAllDiscounted("butter", 341, 1, 1));
+        expected.insert(6, new PurchaseAllDiscounted("meat", 1100, 2, 80));
+        expected.insert(7, new PurchaseAllDiscounted("bread", 155, 1, 2));
+
         list.delete(-4, 4);
-        expected.getPurchases().remove(0);
-        expected.getPurchases().remove(0);
-        expected.getPurchases().remove(0);
-        expected.getPurchases().remove(0);
+
         assertEquals(expected.toString(), list.toString());
     }
 
     @Test
-    void deleteLargeTo() {
+    @DisplayName("delete: to index > list size")
+    void deleteLargeTo() throws CloneNotSupportedException {
+        expected = new PurchaseList();
+        addExpectedAbstractPurchase(0, "bread", 145, 5);
+        expected.insert(1, new PurchaseAllDiscounted("potato", 180, 2, 10));
+        addExpectedAbstractPurchase(2, "butter", 370, 1);
+        addExpectedAbstractPurchase(3, "milk", 131, 2);
+        addExpectedAbstractPurchase(4, "bread", 154, 3);
+        expected.insert(5, new PurchaseAllDiscounted("butter", 341, 1, 1));
+
         list.delete(6, 52368);
-        expected.getPurchases().remove(6);
-        expected.getPurchases().remove(6);
+
         assertEquals(expected.toString(), list.toString());
     }
 
     @Test
+    @DisplayName("delete: from index > to index")
     void deleteFromBiggerThanTo() {
         list.delete(8912, 5);
         assertEquals(expected.toString(), list.toString());
@@ -119,8 +139,8 @@ class PurchaseListTest {
         assertNull(list.binarySearch(purchase));
     }
 
-    private void addExpectedAbstractPurchase(String name, int price, int amount) {
-        expected.getPurchases().add(new AbstractPurchase(name, price, amount) {
+    private void addExpectedAbstractPurchase(int index, String name, int price, int amount) throws CloneNotSupportedException {
+        expected.insert(index, new AbstractPurchase(name, price, amount) {
             @Override
             protected Euro getFinalCost(Euro baseCost) {
                 return baseCost;
@@ -128,17 +148,17 @@ class PurchaseListTest {
         });
     }
 
-    void initializeLists() {
-        list = new PurchaseList("test/java/mjc/resources/purchases.csv");
+    void initializeLists() throws CloneNotSupportedException {
+        list = new PurchaseList("test/java/mjc/resources/purchases.csv", comparator);
 
         expected = new PurchaseList();
-        addExpectedAbstractPurchase("bread", 145, 5);
-        expected.getPurchases().add(new PurchaseAllDiscounted("potato", 180, 2, 10));
-        addExpectedAbstractPurchase("butter", 370, 1);
-        addExpectedAbstractPurchase("milk", 131, 2);
-        addExpectedAbstractPurchase("bread", 154, 3);
-        expected.getPurchases().add(new PurchaseAllDiscounted("butter", 341, 1, 1));
-        expected.getPurchases().add(new PurchaseAllDiscounted("meat", 1100, 2, 80));
-        expected.getPurchases().add(new PurchaseAllDiscounted("bread", 155, 1, 2));
+        addExpectedAbstractPurchase(0, "bread", 145, 5);
+        expected.insert(1, new PurchaseAllDiscounted("potato", 180, 2, 10));
+        addExpectedAbstractPurchase(2, "butter", 370, 1);
+        addExpectedAbstractPurchase(3, "milk", 131, 2);
+        addExpectedAbstractPurchase(4, "bread", 154, 3);
+        expected.insert(5, new PurchaseAllDiscounted("butter", 341, 1, 1));
+        expected.insert(6, new PurchaseAllDiscounted("meat", 1100, 2, 80));
+        expected.insert(7, new PurchaseAllDiscounted("bread", 155, 1, 2));
     }
 }

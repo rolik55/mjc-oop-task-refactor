@@ -1,6 +1,7 @@
 package test.java.mjc;
 
 import main.java.mjc.*;
+import main.java.mjc.beans.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

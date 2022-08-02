@@ -1,6 +1,6 @@
 package test.java.mjc;
 
-import main.java.mjc.Product;
+import main.java.mjc.beans.Product;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

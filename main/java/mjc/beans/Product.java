@@ -5,6 +5,17 @@ public class Product {
     private final Euro price;
 
     public Product(String name, int price) {
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        this.name = name;
+        this.price = new Euro(price);
+    }
+
+    public Product(String name, String price) {
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
         this.name = name;
         this.price = new Euro(price);
     }
@@ -16,5 +27,9 @@ public class Product {
     @Override
     public String toString() {
         return name + ";" + price;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -1,9 +1,6 @@
 package test.java.mjc;
 
-import main.java.mjc.beans.AbstractPurchase;
-import main.java.mjc.beans.Euro;
-import main.java.mjc.beans.PurchaseAllDiscounted;
-import main.java.mjc.beans.PurchaseFactory;
+import main.java.mjc.beans.*;
 import main.java.mjc.exceptions.CsvLineException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,12 +13,7 @@ class PurchaseFactoryTest {
     @DisplayName("purchase no discount")
     void getPurchase() throws CsvLineException {
         String csv = "bread;145;5";
-        AbstractPurchase expected = new AbstractPurchase("bread", 145, 5) {
-            @Override
-            protected Euro getFinalCost(Euro baseCost) {
-                return baseCost;
-            }
-        };
+        AbstractPurchase expected = new PurchaseNoDiscount("bread", 145, 5);
 
         assertEquals(expected.toString(), PurchaseFactory.getPurchase(csv).toString());
     }

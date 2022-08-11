@@ -5,37 +5,34 @@ import main.java.mjc.exceptions.CsvLineException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
-public class PurchaseList{
+public class PurchaseList {
     private List<AbstractPurchase> purchases;
     private final Comparator<AbstractPurchase> comparator;
     private boolean isSorted = false;
 
     public PurchaseList(String csv, Comparator<AbstractPurchase> comparator) {
         this.comparator = comparator;
-        try {
-            readFromFile(csv);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(csv))) {
+            purchases = new ArrayList<>();
+            String csvLine;
+
+            while ((csvLine = reader.readLine()) != null) {
+                try {
+                    purchases.add(PurchaseFactory.getPurchase(csvLine));
+                } catch (CsvLineException e) {
+                    System.err.println(csvLine);
+                }
+            }
         } catch (IOException e) {
             purchases = new ArrayList<>();
         }
     }
-
-    private void readFromFile(String csv) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(csv));
-        String csvLine;
-        purchases = new ArrayList<>();
-
-        while ((csvLine = reader.readLine()) != null) {
-            try {
-                purchases.add(PurchaseFactory.getPurchase(csvLine));
-            } catch (CsvLineException e) {
-                System.err.println(csvLine);
-            }
-        }
-        reader.close();
-    }
-
 
     public void insert(int index, AbstractPurchase purchase) {
         if (index < 0) {
@@ -47,19 +44,17 @@ public class PurchaseList{
         isSorted = false;
     }
 
-    public void delete(int from, int to) {
+    public int delete(int from, int to) {
         if (from < 0) {
             from = 0;
         }
         if (to > purchases.size()) {
             to = purchases.size();
         }
-        //k - how many times to delete (>= from and < to)
-        int k = to - from;
-        for (int i = 0; i < k; i++) {
-            purchases.remove(from);
-        }
+
+        purchases.subList(from, to).clear();
         isSorted = false;
+        return to - from;
     }
 
     public Euro getTotalCost() {
@@ -80,7 +75,7 @@ public class PurchaseList{
     }
 
     public void sort() {
-        if(!isSorted) {
+        if (!isSorted) {
             purchases.sort(comparator);
         }
         isSorted = true;
@@ -89,18 +84,19 @@ public class PurchaseList{
     public AbstractPurchase binarySearch(AbstractPurchase searchKey) {
         sort();
         int index = Collections.binarySearch(purchases, searchKey);
-        try {
-            return purchases.get(index);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
+        return purchases.get(index);
     }
 
-    public List<AbstractPurchase> getPurchases() throws CloneNotSupportedException {
+    public List<AbstractPurchase> getPurchases() {
         ArrayList<AbstractPurchase> purchasesClone = new ArrayList<>();
 
         for (AbstractPurchase purchase : purchases) {
-            purchasesClone.add((AbstractPurchase) purchase.clone());
+            if (purchase instanceof PurchaseNoDiscount) {
+                purchasesClone.add(new PurchaseNoDiscount(purchase));
+            } else {
+                purchasesClone.add(new PurchaseAllDiscounted((PurchaseAllDiscounted) purchase));
+            }
+
         }
         return purchasesClone;
     }

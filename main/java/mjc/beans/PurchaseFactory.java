@@ -7,7 +7,7 @@ public class PurchaseFactory {
         String[] fields = csvLine.split(";");
         try {
             return getPurchaseKind(fields.length).getPurchase(fields);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
             throw new CsvLineException();
         }
     }
@@ -15,30 +15,25 @@ public class PurchaseFactory {
     private enum PurchaseKind {
         PURCHASE {
             @Override
-            protected AbstractPurchase getPurchase(String[] fields) throws Exception {
-                return new AbstractPurchase(fields) {
-                    @Override
-                    protected Euro getFinalCost(Euro baseCost) {
-                        return baseCost;
-                    }
-                };
+            protected AbstractPurchase getPurchase(String[] fields) throws IllegalArgumentException {
+                return new PurchaseNoDiscount(fields);
             }
         },
         PURCHASE_DISCOUNTED {
             @Override
-            protected AbstractPurchase getPurchase(String[] fields) throws Exception {
+            protected AbstractPurchase getPurchase(String[] fields) throws IllegalArgumentException {
                 return new PurchaseAllDiscounted(fields);
             }
         };
 
-        abstract protected AbstractPurchase getPurchase(String[] fields) throws Exception;
+        abstract protected AbstractPurchase getPurchase(String[] fields) throws IllegalArgumentException;
     }
 
     private static PurchaseKind getPurchaseKind(int length) {
         if (length == 3) {
-            return PurchaseKind.PURCHASE;
+            return PurchaseKind.values()[0];
         } else {
-            return PurchaseKind.PURCHASE_DISCOUNTED;
+            return PurchaseKind.values()[1];
         }
     }
 

@@ -17,11 +17,12 @@ public class Euro implements Comparable<Euro> {
     }
 
     private static int getValidValue(int euros, int cents) {
-        if(euros < 0 || cents < 0 || cents >= 100) {
+        if (euros < 0 || cents < 0 || cents >= 100) {
             throw new IllegalArgumentException();
         }
         return euros * 100 + cents;
     }
+
     public Euro(String cents) {
         this(Integer.parseInt(cents));
     }
@@ -58,7 +59,7 @@ public class Euro implements Comparable<Euro> {
 
     @Override
     public int compareTo(Euro euro) {
-        return euro.value - this.value;
+        return value - euro.value;
     }
 
     public Euro mul(double x, RoundMethod roundMethod, int d) {
@@ -67,5 +68,9 @@ public class Euro implements Comparable<Euro> {
 
     public Euro round(RoundMethod roundMethod, int d) {
         return new Euro(roundMethod.round(value, d));
+    }
+
+    public int getValue() {
+        return value;
     }
 }

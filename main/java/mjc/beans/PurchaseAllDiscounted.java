@@ -8,7 +8,16 @@ public class PurchaseAllDiscounted extends AbstractPurchase {
         this.discount = new Euro(discount);
     }
 
-    public PurchaseAllDiscounted(String[] fields) throws Exception {
+    public PurchaseAllDiscounted(PurchaseAllDiscounted purchase) {
+        this(purchase.getProduct(), purchase.getAmount(), purchase.discount);
+    }
+
+    public PurchaseAllDiscounted(Product product, int amount, Euro discount) {
+        super(product, amount);
+        this.discount = discount;
+    }
+
+    public PurchaseAllDiscounted(String[] fields) {
         super(fields);
         this.discount = new Euro(Integer.parseInt(fields[3]));
     }
@@ -20,7 +29,7 @@ public class PurchaseAllDiscounted extends AbstractPurchase {
 
     @Override
     public Euro getFinalCost(Euro baseCost) {
-        Euro discountedCost = new Euro(discount.mul(getAmount()));
+        Euro discountedCost = discount.mul(getAmount());
         return baseCost.sub(discountedCost);
     }
 

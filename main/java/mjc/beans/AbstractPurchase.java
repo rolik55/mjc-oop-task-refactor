@@ -35,7 +35,7 @@ public abstract class AbstractPurchase implements Comparable<AbstractPurchase> {
 
     @Override
     public String toString() {
-        return fieldsToString() + ';' + getCost();
+        return getClass().getSimpleName() + ";" + fieldsToString() + ';' + getCost();
     }
 
     protected String fieldsToString() {

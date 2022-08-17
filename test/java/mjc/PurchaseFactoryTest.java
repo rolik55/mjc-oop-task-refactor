@@ -13,7 +13,7 @@ class PurchaseFactoryTest {
     @DisplayName("purchase no discount")
     void getPurchase() throws CsvLineException {
         String csv = "bread;145;5";
-        AbstractPurchase expected = new PurchaseNoDiscount("bread", 145, 5);
+        AbstractPurchase expected = new Purchase("bread", 145, 5);
 
         assertEquals(expected.toString(), PurchaseFactory.getPurchase(csv).toString());
     }

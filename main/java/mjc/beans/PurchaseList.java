@@ -34,6 +34,10 @@ public class PurchaseList {
         }
     }
 
+    public void add(AbstractPurchase purchase) {
+        purchases.add(purchase);
+    }
+
     public void insert(int index, AbstractPurchase purchase) {
         if (index < 0) {
             index = 0;
@@ -67,11 +71,11 @@ public class PurchaseList {
 
     @Override
     public String toString() {
-        String string = "";
+        StringBuilder string = new StringBuilder();
         for (AbstractPurchase purchase : purchases) {
-            string += purchase + "\n";
+            string.append(purchase).append("\n");
         }
-        return string;
+        return string.toString();
     }
 
     public void sort() {
@@ -91,8 +95,8 @@ public class PurchaseList {
         ArrayList<AbstractPurchase> purchasesClone = new ArrayList<>();
 
         for (AbstractPurchase purchase : purchases) {
-            if (purchase instanceof PurchaseNoDiscount) {
-                purchasesClone.add(new PurchaseNoDiscount(purchase));
+            if (purchase instanceof Purchase) {
+                purchasesClone.add(new Purchase(purchase));
             } else {
                 purchasesClone.add(new PurchaseAllDiscounted((PurchaseAllDiscounted) purchase));
             }
@@ -103,6 +107,11 @@ public class PurchaseList {
 
     public PurchaseList() {
         this.purchases = new ArrayList<>();
+        this.comparator = AbstractPurchase::compareTo;
+    }
+
+    public PurchaseList(List<AbstractPurchase> purchases) {
+        this.purchases = purchases;
         this.comparator = AbstractPurchase::compareTo;
     }
 }

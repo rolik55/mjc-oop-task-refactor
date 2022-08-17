@@ -16,7 +16,7 @@ public class PurchaseFactory {
         PURCHASE {
             @Override
             protected AbstractPurchase getPurchase(String[] fields) throws IllegalArgumentException {
-                return new PurchaseNoDiscount(fields);
+                return new Purchase(fields);
             }
         },
         PURCHASE_DISCOUNTED {

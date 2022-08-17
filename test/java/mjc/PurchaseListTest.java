@@ -55,10 +55,10 @@ class PurchaseListTest {
     @Test
     void delete() {
         expected = new PurchaseList();
-        expected.insert(0, new PurchaseNoDiscount("bread", 145, 5));
+        expected.insert(0, new Purchase("bread", 145, 5));
         expected.insert(1, new PurchaseAllDiscounted("potato", 180, 2, 10));
-        expected.insert(2, new PurchaseNoDiscount("butter", 370, 1));
-        expected.insert(3, new PurchaseNoDiscount("milk", 131, 2));
+        expected.insert(2, new Purchase("butter", 370, 1));
+        expected.insert(3, new Purchase("milk", 131, 2));
 
         int expectedDeletedCount = 4;
 
@@ -70,7 +70,7 @@ class PurchaseListTest {
     @DisplayName("delete: from index < 0")
     void deleteNegativeFrom() {
         expected = new PurchaseList();
-        expected.insert(4, new PurchaseNoDiscount("bread", 154, 3));
+        expected.insert(4, new Purchase("bread", 154, 3));
         expected.insert(5, new PurchaseAllDiscounted("butter", 341, 1, 1));
         expected.insert(6, new PurchaseAllDiscounted("meat", 1100, 2, 80));
         expected.insert(7, new PurchaseAllDiscounted("bread", 155, 1, 2));
@@ -85,11 +85,11 @@ class PurchaseListTest {
     @DisplayName("delete: to index > list size")
     void deleteLargeTo() {
         expected = new PurchaseList();
-        expected.insert(0, new PurchaseNoDiscount("bread", 145, 5));
+        expected.insert(0, new Purchase("bread", 145, 5));
         expected.insert(1, new PurchaseAllDiscounted("potato", 180, 2, 10));
-        expected.insert(2, new PurchaseNoDiscount("butter", 370, 1));
-        expected.insert(3, new PurchaseNoDiscount("milk", 131, 2));
-        expected.insert(4, new PurchaseNoDiscount("bread", 154, 3));
+        expected.insert(2, new Purchase("butter", 370, 1));
+        expected.insert(3, new Purchase("milk", 131, 2));
+        expected.insert(4, new Purchase("bread", 154, 3));
         expected.insert(5, new PurchaseAllDiscounted("butter", 341, 1, 1));
 
         int expectedDeletedCount = 2;
@@ -141,11 +141,11 @@ class PurchaseListTest {
         list = new PurchaseList("test/java/mjc/resources/purchases.csv", comparator);
 
         expected = new PurchaseList();
-        expected.insert(0, new PurchaseNoDiscount("bread", 145, 5));
+        expected.insert(0, new Purchase("bread", 145, 5));
         expected.insert(1, new PurchaseAllDiscounted("potato", 180, 2, 10));
-        expected.insert(2, new PurchaseNoDiscount("butter", 370, 1));
-        expected.insert(3, new PurchaseNoDiscount("milk", 131, 2));
-        expected.insert(4, new PurchaseNoDiscount("bread", 154, 3));
+        expected.insert(2, new Purchase("butter", 370, 1));
+        expected.insert(3, new Purchase("milk", 131, 2));
+        expected.insert(4, new Purchase("bread", 154, 3));
         expected.insert(5, new PurchaseAllDiscounted("butter", 341, 1, 1));
         expected.insert(6, new PurchaseAllDiscounted("meat", 1100, 2, 80));
         expected.insert(7, new PurchaseAllDiscounted("bread", 155, 1, 2));

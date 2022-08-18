@@ -1,5 +1,7 @@
 package main.java.mjc.beans;
 
+import java.util.Objects;
+
 public abstract class AbstractPurchase implements Comparable<AbstractPurchase> {
     private final Product product;
     private final int amount;
@@ -15,6 +17,23 @@ public abstract class AbstractPurchase implements Comparable<AbstractPurchase> {
 
     public AbstractPurchase(AbstractPurchase purchase) {
         this(purchase.product, purchase.amount);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (o instanceof Purchase || o instanceof PurchaseAllDiscounted) {
+            AbstractPurchase purchase = (AbstractPurchase) o;
+            return Objects.equals(product, purchase.product);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product);
     }
 
     public AbstractPurchase(Product product, int amount) {

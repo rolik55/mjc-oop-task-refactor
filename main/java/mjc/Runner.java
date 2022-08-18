@@ -47,21 +47,29 @@ public class Runner {
 //        System.out.println(list.binarySearch(searchKey));;
 
         //Collections Task
-        Map<AbstractPurchase, Weekday> purchasesLastDayMap = new HashMap<>();
-        Map<AbstractPurchase, Weekday> purchasesFirstDayMap = new HashMap<>();
-        EnumMap<Weekday, PurchaseList> weekdayPurchaseEnumMap = new EnumMap<>(Weekday.class);
-        PurchaseList discountedPurchases = new PurchaseList();
+        final String FILENAME = "main/java/mjc/resources/purchases.csv";
+        Map<AbstractPurchase, Weekday> purchasesLastDayMap;
+        Map<AbstractPurchase, Weekday> purchasesFirstDayMap;
+        Map<Weekday, PurchaseList> weekdayPurchaseEnumMap;
+        PurchaseList discountedPurchases;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("main/java/mjc/resources/purchases.csv"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILENAME))) {
+            purchasesLastDayMap = new HashMap<>();
+            purchasesFirstDayMap = new HashMap<>();
+            weekdayPurchaseEnumMap = new EnumMap<>(Weekday.class);
+            discountedPurchases = new PurchaseList();
             String day, csvLine;
+
             while ((csvLine = reader.readLine()) != null && (day = reader.readLine()) != null) {
                 AbstractPurchase purchase = PurchaseFactory.getPurchase(csvLine);
+                Weekday weekday = Weekday.valueOf(day);
+
+                putLastDay(purchasesLastDayMap, weekday, purchase);
+                putFirstDay(purchasesFirstDayMap, weekday, purchase);
+                putEnumMapPurchase(weekdayPurchaseEnumMap, weekday, purchase);
                 if (purchase instanceof PurchaseAllDiscounted) {
                     discountedPurchases.add(purchase);
                 }
-                putLastDay(purchasesLastDayMap, day, purchase);
-                putFirstDay(purchasesFirstDayMap, day, purchase);
-                putEnumMapPurchase(weekdayPurchaseEnumMap, day, purchase);
             }
         } catch (IOException e) {
             throw new RuntimeException("No source file found.");
@@ -69,61 +77,82 @@ public class Runner {
             throw new RuntimeException();
         }
 
-//        printMap(purchasesLastDayMap);
-//        printMap(purchasesFirstDayMap);
-//        printMap(weekdayPurchaseEnumMap);
+        System.out.println("Purchase => Weekday of LAST purchase");
+        printMap(purchasesLastDayMap);
+        System.out.println("Purchase => Weekday of FIRST purchase");
+        printMap(purchasesFirstDayMap);
 
-//        Product product = new Product("bread", 155);
-//        System.out.println("First day: " + findMapValue(purchasesFirstDayMap, product));
-//        System.out.println("Last day: " + findMapValue(purchasesLastDayMap, product));
-//        System.out.println("First day: " + findMapValue(purchasesFirstDayMap, new Product("bread", 170)));
+        Purchase purchase1 = new Purchase("bread", 155, 1);
+        System.out.println("Find FIRST weekday for product " + purchase1.getProduct() + ": " + findMapValue(purchasesFirstDayMap, purchase1));
+        System.out.println("Find LAST weekday for product " + purchase1.getProduct() + ": " + findMapValue(purchasesLastDayMap, purchase1));
+        Purchase purchase2 = new Purchase("bread", 170, 1);
+        System.out.println("Find FIRST weekday for product " + purchase2.getProduct() + ": " + findMapValue(purchasesFirstDayMap, purchase2));
 
-//        removeMapEntries(purchasesLastDayMap, "meat");
-//        removeMapEntries(purchasesFirstDayMap, Weekday.FRIDAY);
-
-//        System.out.println(discountedPurchases.getTotalCost());
-
-//        for (Map.Entry<Weekday, PurchaseList> entry : weekdayPurchaseEnumMap.entrySet()) {
-//            System.out.println(entry.getKey() + " " + entry.getValue().getTotalCost());
-//        }
-
-//        System.out.println(findMapValue(weekdayPurchaseEnumMap, Weekday.MONDAY));
-    }
-
-    private static <T> void removeMapEntries(Map<AbstractPurchase, Weekday> map, T field) {
-        List<AbstractPurchase> toBeRemoved = new ArrayList<>();
-        for (Map.Entry<AbstractPurchase, Weekday> entry : map.entrySet()) {
-            if (entry.getValue() == field || entry.getKey().getProduct().getName().equals(field)) {
-                toBeRemoved.add(entry.getKey());
+        removeMapEntries(purchasesLastDayMap, new EntryChecker<>() {
+            @Override
+            public boolean check(Map.Entry<AbstractPurchase, Weekday> entry) {
+                return entry.getKey().getProduct().getName().equals("meat");
             }
-        }
-        for (AbstractPurchase purchase : toBeRemoved) {
-            map.remove(purchase);
-        }
-    }
-
-    private static void putFirstDay(Map<AbstractPurchase, Weekday> map, String day, AbstractPurchase purchase) {
-        if (findMapValue(map, purchase.getProduct()) == null) {
-            map.put(purchase, Weekday.valueOf(day));
-        }
-    }
-
-    private static void putLastDay(Map<AbstractPurchase, Weekday> map, String day, AbstractPurchase purchase) {
-        for (AbstractPurchase key : map.keySet()) {
-            if (key.getProduct().toString().equals(purchase.getProduct().toString())) {
-                map.remove(key);
-                break;
+        });
+        removeMapEntries(purchasesFirstDayMap, new EntryChecker<>() {
+            @Override
+            public boolean check(Map.Entry<AbstractPurchase, Weekday> entry) {
+                return entry.getValue().equals(Weekday.FRIDAY);
             }
+        });
+
+        System.out.println("\nRemoved entries where name is 'meat'");
+        printMap(purchasesLastDayMap);
+        System.out.println("Removed entries where weekday is 'FRIDAY'");
+        printMap(purchasesFirstDayMap);
+
+        System.out.println("Total cost of discounted purchases: " + discountedPurchases.getTotalCost() + "\n");
+
+        System.out.println("Weekday => List of purchases");
+        printMap(weekdayPurchaseEnumMap);
+
+        System.out.println("Total cost of purchases in a single day");
+        for (Map.Entry<Weekday, PurchaseList> entry : weekdayPurchaseEnumMap.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue().getTotalCost());
         }
-        map.put(purchase, Weekday.valueOf(day));
+
+        System.out.println("\nFind purchases on MONDAY");
+        System.out.println(findMapValue(weekdayPurchaseEnumMap, Weekday.MONDAY));
+
+        removeMapEntries(weekdayPurchaseEnumMap, new EntryChecker<>() {
+            @Override
+            public boolean check(Map.Entry<Weekday, PurchaseList> entry) {
+                return entry.getValue().getPurchases().removeIf(purchase -> purchase.getProduct().getName().equals("milk"));
+            }
+        });
+        System.out.println("Removed entries where name is 'milk'");
+        printMap(weekdayPurchaseEnumMap);
     }
 
-    private static void putEnumMapPurchase(EnumMap<Weekday, PurchaseList> map, String day, AbstractPurchase purchase) {
-        PurchaseList value = findMapValue(map, Weekday.valueOf(day));
-        if (value != null) {
-            value.add(purchase);
+    public interface EntryChecker<K, V> {
+        boolean check(Map.Entry<K, V> entry);
+    }
+
+    private static <K, V> void removeMapEntries(Map<K, V> map, EntryChecker<K, V> checker) {
+        map.entrySet().removeIf(checker::check);
+    }
+
+    private static void putFirstDay(Map<AbstractPurchase, Weekday> map, Weekday day, AbstractPurchase purchase) {
+        if (!map.containsKey(purchase)) {
+            map.put(purchase, day);
+        }
+    }
+
+    private static void putLastDay(Map<AbstractPurchase, Weekday> map, Weekday day, AbstractPurchase purchase) {
+        map.remove(purchase);
+        map.put(purchase, day);
+    }
+
+    private static void putEnumMapPurchase(Map<Weekday, PurchaseList> map, Weekday day, AbstractPurchase purchase) {
+        if (map.containsKey(day)) {
+            map.get(day).add(purchase);
         } else {
-            map.put(Weekday.valueOf(day), new PurchaseList(new ArrayList<>(List.of(purchase))));
+            map.put(day, new PurchaseList(new ArrayList<>(List.of(purchase))));
         }
     }
 
@@ -131,15 +160,11 @@ public class Runner {
         for (Map.Entry<K, V> entry : map.entrySet()) {
             System.out.println(entry.getKey() + "=>" + entry.getValue().toString());
         }
+        System.out.println();
     }
 
-    private static <K, V, T> V findMapValue(Map<K, V> map, T searchKey) {
-        for (Map.Entry<K, V> entry : map.entrySet()) {
-            if (entry.getKey() == searchKey || entry.getKey().toString().contains(searchKey.toString())) {
-                return entry.getValue();
-            }
-        }
-        return null;
+    private static <K, V> V findMapValue(Map<K, V> map, K searchKey) {
+        return map.get(searchKey);
     }
 
     private static void printPurchases(AbstractPurchase[] purchases) {

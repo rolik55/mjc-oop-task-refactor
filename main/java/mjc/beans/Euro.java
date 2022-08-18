@@ -1,6 +1,7 @@
 package main.java.mjc.beans;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class Euro implements Comparable<Euro> {
     private final int value;
@@ -45,6 +46,19 @@ public class Euro implements Comparable<Euro> {
 
     public Euro mul(int k) {
         return new Euro(this.value * k);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Euro euro = (Euro) o;
+        return value == euro.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
     @Override

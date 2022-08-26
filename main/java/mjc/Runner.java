@@ -128,12 +128,10 @@ public class Runner {
         }
     }
 
-    private static Euro getTotalCost(List<?> purchases) {
+    private static Euro getTotalCost(List<? extends AbstractPurchase> purchases) {
         Euro totalCost = new Euro(0);
-        for (Object purchase : purchases) {
-            if (purchase instanceof AbstractPurchase p) {
-                totalCost = totalCost.add(p.getCost());
-            }
+        for (AbstractPurchase purchase : purchases) {
+            totalCost = totalCost.add(purchase.getCost());
         }
         return totalCost;
     }
